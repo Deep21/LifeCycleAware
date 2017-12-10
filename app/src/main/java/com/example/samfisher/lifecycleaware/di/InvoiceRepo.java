@@ -1,5 +1,7 @@
 package com.example.samfisher.lifecycleaware.di;
 
+import android.arch.lifecycle.LiveData;
+
 import com.example.samfisher.lifecycleaware.Contact;
 
 import java.util.List;
@@ -19,23 +21,22 @@ import retrofit2.Retrofit;
 
 public class InvoiceRepo {
 
-    private InvoiceApi invoiceApi;
+  private InvoiceApi invoiceApi;
 
-    @Inject
-    public InvoiceRepo(InvoiceApi invoiceApi) {
-        this.invoiceApi = invoiceApi;
-    }
+  @Inject
+  public InvoiceRepo(InvoiceApi invoiceApi) {
+    this.invoiceApi = invoiceApi;
+  }
 
-    public Observable<List<Contact>> getContact(){
-        return invoiceApi.getListContacts()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io());
-    }
+  public Observable<List<Contact>> getContacts() {
+    return invoiceApi.getListContacts()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io());
+  }
 
-    public Flowable<List<Contact>> getContactFlowable(){
-        return invoiceApi.getListContacts()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .toFlowable(BackpressureStrategy.LATEST);
-    }
+  public Observable<Contact> getContact(int id) {
+    return invoiceApi.getContact(id)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io());
+  }
 }
