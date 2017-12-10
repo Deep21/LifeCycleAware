@@ -4,11 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-<<<<<<< HEAD
-=======
-import android.view.View;
 import android.widget.Button;
->>>>>>> add error handling
 
 import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
 
