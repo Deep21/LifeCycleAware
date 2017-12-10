@@ -4,11 +4,9 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.example.samfisher.lifecycleaware.MyViewModel;
+import com.example.samfisher.lifecycleaware.ContactViewModel;
 
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 /**
  * Created by Samfisher on 27/11/2017.
@@ -16,10 +14,10 @@ import timber.log.Timber;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private MyViewModel myViewModel;
+    private ContactViewModel myViewModel;
 
     @Inject
-    public ViewModelFactory(MyViewModel myViewModel) {
+    public ViewModelFactory(ContactViewModel myViewModel) {
         this.myViewModel = myViewModel;
     }
 
@@ -27,7 +25,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(MyViewModel.class)) {
+        if (modelClass.isAssignableFrom(ContactViewModel.class)) {
             return (T) myViewModel;
         }
 
