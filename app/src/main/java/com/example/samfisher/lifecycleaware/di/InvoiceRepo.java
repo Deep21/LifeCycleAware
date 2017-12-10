@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -28,5 +30,12 @@ public class InvoiceRepo {
         return invoiceApi.getListContacts()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Flowable<List<Contact>> getContactFlowable(){
+        return invoiceApi.getListContacts()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .toFlowable(BackpressureStrategy.LATEST);
     }
 }

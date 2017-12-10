@@ -5,4 +5,7 @@ package com.example.samfisher.lifecycleaware.di;
  */
 
 enum Status {
+    SUCCESS,
+    ERROR,
+    LOADING
 }

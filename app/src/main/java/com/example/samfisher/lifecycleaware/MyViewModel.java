@@ -1,22 +1,21 @@
 package com.example.samfisher.lifecycleaware;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.LiveDataReactiveStreams;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.example.samfisher.lifecycleaware.di.InvoiceRepo;
+import com.example.samfisher.lifecycleaware.di.Resource;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by Samfisher on 22/11/2017.
@@ -24,49 +23,36 @@ import timber.log.Timber;
 
 public class MyViewModel extends ViewModel {
 
-    private LiveData<List<Contact>> listLiveData;
-
-    private GenericLiveData<List<Contact>> stringGenericLiveData;
-
+    private static final String TAG = "MyViewModel";
     private InvoiceRepo invoiceRepo;
-
+    private MediatorLiveData<Resource> tMediatorLiveData;
+    private MutableLiveData<Resource<List<Contact>>> contact = new MutableLiveData<>();
+    private MutableLiveData<Resource<Throwable>> error = new MutableLiveData<>();
 
     @Inject
     public MyViewModel(InvoiceRepo invoiceRepo) {
         this.invoiceRepo = invoiceRepo;
     }
 
-    @Override
-    protected void onCleared() {
-        Timber.d("onCleared");
-        super.onCleared();
+    public MediatorLiveData<Resource> init() {
+        tMediatorLiveData = new MediatorLiveData<>();
+        invoiceRepo
+                .getContact()
+                .subscribe(
+                        contacts -> Log.d(TAG, "onNext: " + contacts),
+                        throwable -> {
+                            Log.d(TAG, "onError: " + throwable);
+                            error.setValue(Resource.error(throwable.getMessage(), throwable));},
+                        () -> Log.d(TAG, "complete: "));
+
+        tMediatorLiveData.addSource(contact, listResource -> tMediatorLiveData.setValue(listResource));
+        tMediatorLiveData.addSource(error, resource -> {
+            tMediatorLiveData.setValue(resource);
+            tMediatorLiveData.removeSource(contact);
+        });
+
+        return tMediatorLiveData;
     }
 
-    public GenericLiveData<List<Contact>> getName() {
-        if (null == stringGenericLiveData) {
-            Log.d("MyViewModel", "getListContact:" + stringGenericLiveData);
-            //long running task
-            stringGenericLiveData = new GenericLiveData<>();
-            stringGenericLiveData.get(invoiceRepo.getContact());
-            return stringGenericLiveData;
-        }
-        Log.d("MyViewModel", "getListContact: return" + stringGenericLiveData.getValue());
-        return stringGenericLiveData;
-    }
-
-    public LiveData<List<Contact>> getListContact() {
-        if (null == listLiveData) {
-            listLiveData = new MutableLiveData<>();
-            Log.d("MyViewModel", "getListContact: " + listLiveData);
-            Flowable<List<Contact>> contactFlowable = invoiceRepo.getContact()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .toFlowable(BackpressureStrategy.BUFFER);
-            listLiveData = LiveDataReactiveStreams.fromPublisher(contactFlowable);
-            return listLiveData;
-        }
-        Log.d("MyViewModel", "getListContact: " + listLiveData.getValue());
-        return listLiveData;
-    }
 
 }

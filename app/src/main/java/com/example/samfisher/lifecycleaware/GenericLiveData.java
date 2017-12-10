@@ -32,7 +32,7 @@ public class GenericLiveData<T> extends LiveData<T> {
     }
 
     public void get(Observable<T> tObservable) {
-        Disposable disposable = tObservable.toFlowable(BackpressureStrategy.LATEST).subscribe(this::setValue);
+        Disposable disposable = tObservable.subscribe(this::setValue);
         compositeDisposable = new CompositeDisposable();
         compositeDisposable.add(disposable);
     }
