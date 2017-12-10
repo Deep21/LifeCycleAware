@@ -29,30 +29,41 @@ public class MyViewModel extends ViewModel {
     private MutableLiveData<Resource<List<Contact>>> contact = new MutableLiveData<>();
     private MutableLiveData<Resource<Throwable>> error = new MutableLiveData<>();
 
+    private List<Contact> contacts;
+
+
     @Inject
     public MyViewModel(InvoiceRepo invoiceRepo) {
         this.invoiceRepo = invoiceRepo;
     }
 
     public MediatorLiveData<Resource> init() {
-        tMediatorLiveData = new MediatorLiveData<>();
-        invoiceRepo
-                .getContact()
-                .subscribe(
-                        contacts -> Log.d(TAG, "onNext: " + contacts),
-                        throwable -> {
-                            Log.d(TAG, "onError: " + throwable);
-                            error.setValue(Resource.error(throwable.getMessage(), throwable));},
-                        () -> Log.d(TAG, "complete: "));
 
-        tMediatorLiveData.addSource(contact, listResource -> tMediatorLiveData.setValue(listResource));
-        tMediatorLiveData.addSource(error, resource -> {
-            tMediatorLiveData.setValue(resource);
-            tMediatorLiveData.removeSource(contact);
-        });
+        if (tMediatorLiveData == null) {
+            tMediatorLiveData = new MediatorLiveData<>();
+            invoiceRepo
+                    .getContact()
+                    .subscribe(
+                            contacts -> {
+                                contact.setValue(Resource.success(contacts));
+                                this.contacts = contacts;
+                            },
+                            throwable -> {
+                                Log.d(TAG, "onError: " + throwable);
+                                error.setValue(Resource.error(throwable.getMessage(), throwable));
+                            },
+                            () -> Log.d(TAG, "complete: "));
+
+            tMediatorLiveData.addSource(contact, listResource -> tMediatorLiveData.setValue(listResource));
+            tMediatorLiveData.addSource(error, resource -> {
+                tMediatorLiveData.setValue(resource);
+            });
+        }
 
         return tMediatorLiveData;
     }
 
-
+    public List<Contact> getContacts() {
+        return contacts;
+    }
 }
