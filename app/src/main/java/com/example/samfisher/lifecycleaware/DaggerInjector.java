@@ -3,11 +3,17 @@ package com.example.samfisher.lifecycleaware;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import com.example.samfisher.lifecycleaware.di.App;
 import com.example.samfisher.lifecycleaware.di.DaggerAppComponent;
+import com.example.samfisher.lifecycleaware.view.Injectable;
 
 import dagger.android.AndroidInjection;
+import dagger.android.support.AndroidSupportInjection;
+import dagger.android.support.HasSupportFragmentInjector;
 import timber.log.Timber;
 
 /**
@@ -62,7 +68,28 @@ public class DaggerInjector {
         });
     }
 
-    static void handle(Activity activity){
-        AndroidInjection.inject(activity);
+    static void handle(Activity activity) {
+        //on vérifie si on implémente HasSupportFragmentInjector
+        if (activity instanceof HasSupportFragmentInjector) {
+            Timber.i("HasSupportFragmentInjector");
+            AndroidInjection.inject(activity);
+        }
+
+        if (activity instanceof FragmentActivity) {
+            ((FragmentActivity) activity)
+                    .getSupportFragmentManager()
+                    .registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                        @Override
+                        public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
+                            super.onFragmentActivityCreated(fm, f, savedInstanceState);
+                            Timber.i("onFragmentActivityCreated");
+                            if (f instanceof Injectable) {
+                                Timber.i("Injectable");
+                                AndroidSupportInjection.inject(f);
+                            }
+                        }
+                    }, true);
+
+        }
     }
 }

@@ -25,9 +25,9 @@ public class MyViewModel extends ViewModel {
 
     private static final String TAG = "MyViewModel";
     private InvoiceRepo invoiceRepo;
-    private MediatorLiveData<Resource> tMediatorLiveData;
-    private MutableLiveData<Resource<List<Contact>>> contact = new MutableLiveData<>();
-    private MutableLiveData<Resource<Throwable>> error = new MutableLiveData<>();
+    public MediatorLiveData<Resource> tMediatorLiveData;
+    public MutableLiveData<Resource<List<Contact>>> contact = new MutableLiveData<>();
+    public MutableLiveData<Resource<Throwable>> error = new MutableLiveData<>();
 
     private List<Contact> contacts;
 
@@ -55,6 +55,7 @@ public class MyViewModel extends ViewModel {
             tMediatorLiveData.addSource(contact, listResource -> tMediatorLiveData.setValue(listResource));
             tMediatorLiveData.addSource(error, resource -> {
                 tMediatorLiveData.setValue(resource);
+                tMediatorLiveData.removeSource(contact);
             });
         }
 
