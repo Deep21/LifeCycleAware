@@ -31,14 +31,12 @@ public class MyViewModel extends ViewModel {
 
     private List<Contact> contacts;
 
-
     @Inject
     public MyViewModel(InvoiceRepo invoiceRepo) {
         this.invoiceRepo = invoiceRepo;
     }
 
     public MediatorLiveData<Resource> init() {
-
         if (tMediatorLiveData == null) {
             tMediatorLiveData = new MediatorLiveData<>();
             invoiceRepo

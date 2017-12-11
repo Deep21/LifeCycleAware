@@ -10,8 +10,6 @@ import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
@@ -20,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button btn = findViewById(R.id.next);
