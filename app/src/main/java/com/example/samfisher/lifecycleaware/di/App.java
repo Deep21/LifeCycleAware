@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.example.samfisher.lifecycleaware.BuildConfig;
 
+import com.squareup.leakcanary.LeakCanary;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
@@ -17,27 +18,29 @@ import timber.log.Timber;
  */
 
 public class App extends Application implements HasActivityInjector {
-    @Inject
-    DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
 
-    @Override
-    public void onCreate() {
-        DaggerAppComponent
-                .builder()
-                .application(this)
-                .build()
-                .inject(this);
+  @Inject
+  DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-        super.onCreate();
+  @Override
+  public void onCreate() {
+    DaggerAppComponent
+        .builder()
+        .application(this)
+        .build()
+        .inject(this);
+
+    if (BuildConfig.DEBUG) {
+      Timber.plant(new Timber.DebugTree());
     }
+    super.onCreate();
+    LeakCanary.install(this);
+  }
 
-    @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return activityDispatchingAndroidInjector;
-    }
+  @Override
+  public AndroidInjector<Activity> activityInjector() {
+    return activityDispatchingAndroidInjector;
+  }
 
 }
 

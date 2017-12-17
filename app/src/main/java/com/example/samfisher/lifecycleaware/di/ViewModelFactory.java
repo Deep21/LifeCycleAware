@@ -3,9 +3,7 @@ package com.example.samfisher.lifecycleaware.di;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-
 import com.example.samfisher.lifecycleaware.ContactViewModel;
-
 import javax.inject.Inject;
 
 /**
