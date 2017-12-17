@@ -1,61 +1,67 @@
 package com.example.samfisher.lifecycleaware;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Button;
-
+import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import com.example.samfisher.lifecycleaware.ContactListAdapter.OnItemClickListener;
-import com.example.samfisher.lifecycleaware.di.Resource;
 import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
-
+import dagger.android.AndroidInjection;
 import java.util.List;
 import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = "MainActivity";
-
   @Inject
   ViewModelFactory viewModelFactory;
-  @BindView(R.id.contact_recycler_view)
-  RecyclerView recyclerView;
-  LinearLayoutManager mLayoutManager;
   @Inject
   ContactListAdapter contactListAdapter;
-  private Unbinder unbinder;
+  @BindView(R.id.contact_recycler_view)
+  RecyclerView recyclerView;
+  @BindView(R.id.main_layout_id)
+  View view;
+  @BindView(R.id.fab)
+  FloatingActionButton fab;
+  ContactViewModel model;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     AndroidInjection.inject(this);
     super.onCreate(savedInstanceState);
-    Log.d(TAG, "onCreate: ");
     setContentView(R.layout.activity_main);
-    unbinder = ButterKnife.bind(this);
+    ButterKnife.bind(this);
+    fab.setOnClickListener(v -> model.loadContact());
+    contactListAdapter.setOnItemClickListener(position -> {
+      model.setContactId(position);
+    });
     recyclerView.setHasFixedSize(true);
-    mLayoutManager = new LinearLayoutManager(this);
+    LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setAdapter(contactListAdapter);
-    ContactViewModel contactViewModel = ViewModelProviders.of(this, viewModelFactory).get(ContactViewModel.class);
-    contactViewModel.getContacts().observe(this, resource -> {
-      contactListAdapter.setContactList((List<ContactModel>)resource.data);
-      contactListAdapter.notifyDataSetChanged();
-    });
-    contactListAdapter.setOnItemClickListener(position -> {
-      Log.d(TAG, "onCreate: " + position);
-      contactViewModel.setContact(position);
-      contactViewModel.getContact().observe(MainActivity.this, contact -> Log.d(TAG, "onChanged: " + contact));
+    model = ViewModelProviders.of(this, viewModelFactory).get(ContactViewModel.class);
+    showContacts();
+    observeOnContactSelected();
+  }
 
+  private void observeOnContactSelected() {
+    model.getContactById().observe(this,
+        resource -> Log.d(TAG, "observeOnContactSelected: " + ((Contact)resource.data).getCompany()));
+  }
+
+  private void showContacts() {
+    model.getContacts().observe(this, resource -> {
+      Log.d(TAG, "onCreate: " + resource);
+      contactListAdapter.setContactList((List<Contact>) resource.data);
+      contactListAdapter.notifyDataSetChanged();
     });
   }
 
@@ -65,12 +71,10 @@ public class MainActivity extends AppCompatActivity {
     super.onStop();
   }
 
-
   @Override
   protected void onDestroy() {
     Log.d(TAG, "onDestroy: ");
     super.onDestroy();
-    unbinder.unbind();
   }
 
   @Override

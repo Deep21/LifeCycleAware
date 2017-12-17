@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHolder> {
 
-  private List<ContactModel> contactList;
+  private List<Contact> contactList;
   private Context context;
   private OnItemClickListener onItemClickListener;
 
@@ -25,8 +25,11 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     this.onItemClickListener = onItemClickListener;
   }
 
-  public interface OnItemClickListener {
+  public void setModel(ContactViewModel model) {
 
+  }
+
+  public interface OnItemClickListener {
     void onUserItemClicked(int position);
   }
 
@@ -44,12 +47,9 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
-    final int pos = position;
-
     holder.name.setText(contactList.get(position).getFirstname());
     holder.company.setText(contactList.get(position).getCompany());
-    holder.itemView.setOnClickListener(v -> onItemClickListener.onUserItemClicked(pos));
-
+    holder.itemView.setOnClickListener(v -> onItemClickListener.onUserItemClicked(position));
   }
 
   @Override
@@ -57,7 +57,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     return contactList != null ? contactList.size() : 0;
   }
 
-  public void setContactList(List<ContactModel> contactList) {
+  public void setContactList(List<Contact> contactList) {
     this.contactList = contactList;
   }
 
