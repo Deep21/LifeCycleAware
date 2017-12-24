@@ -7,24 +7,11 @@
   android:layout_height="match_parent"
   tools:context="com.example.samfisher.lifecycleaware.MainActivity">
 
-  <android.support.v7.widget.RecyclerView
-    android:id="@+id/contact_recycler_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="vertical"/>
+  <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+  </FrameLayout>
 
-  <android.support.design.widget.FloatingActionButton
-    android:id="@+id/fab"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    app:fabSize="normal"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.933"/>
 
 </android.support.constraint.ConstraintLayout>
