@@ -1,6 +1,7 @@
 package com.example.samfisher.lifecycleaware.di;
 
-import com.example.samfisher.lifecycleaware.Main2Activity;
+import com.example.samfisher.lifecycleaware.ContactDetailFragment;
+import com.example.samfisher.lifecycleaware.ContactListFragment;
 import com.example.samfisher.lifecycleaware.MainActivity;
 
 import dagger.Module;
@@ -19,6 +20,10 @@ abstract class ActivityBindingsModule {
 
   @ActivityScoped
   @ContributesAndroidInjector
-  abstract Main2Activity bindActivity2();
+  abstract ContactListFragment bindContactListFragment();
+
+  @ActivityScoped
+  @ContributesAndroidInjector
+  abstract ContactDetailFragment bindContactDetailFragment();
 
 }

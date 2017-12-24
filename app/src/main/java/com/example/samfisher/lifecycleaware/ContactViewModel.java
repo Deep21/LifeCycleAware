@@ -29,6 +29,11 @@ public class ContactViewModel extends ViewModel {
   private MutableLiveData<Resource<List<Contact>>> listContactMediatorLiveData = new MutableLiveData<>();
   private MediatorLiveData<Resource> tMediatorLiveDatas;
   private MediatorLiveData<Resource> contactsListMediatorLiveData;
+
+  public SingleLiveEvent<Integer> getContactId() {
+    return contactId;
+  }
+
   private SingleLiveEvent<Integer> contactId = new SingleLiveEvent<>();
   private MutableLiveData<Resource<Contact>> data = new MediatorLiveData<>();
 

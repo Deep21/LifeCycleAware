@@ -1,37 +1,30 @@
 package com.example.samfisher.lifecycleaware;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import butterknife.BindView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
 import dagger.android.AndroidInjection;
-import java.util.List;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
   private static final String TAG = "MainActivity";
   @Inject
-  ViewModelFactory viewModelFactory;
+  DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
   @Inject
-  ContactListAdapter contactListAdapter;
-  @BindView(R.id.contact_recycler_view)
-  RecyclerView recyclerView;
-  @BindView(R.id.main_layout_id)
-  View view;
-  @BindView(R.id.fab)
-  FloatingActionButton fab;
-  ContactViewModel model;
+  ViewModelFactory viewModelFactory;
+  ContactViewModel contactViewModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -39,59 +32,34 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
-    fab.setOnClickListener(v -> model.loadContact());
-    contactListAdapter.setOnItemClickListener(position -> {
-      model.setContactId(position);
-    });
-    recyclerView.setHasFixedSize(true);
-    LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-    recyclerView.setLayoutManager(mLayoutManager);
-    recyclerView.setAdapter(contactListAdapter);
-    model = ViewModelProviders.of(this, viewModelFactory).get(ContactViewModel.class);
-    showContacts();
-    observeOnContactSelected();
-  }
-
-  private void observeOnContactSelected() {
-    model.getContactById().observe(this,
-        resource -> Log.d(TAG, "observeOnContactSelected: " + ((Contact)resource.data).getCompany()));
-  }
-
-  private void showContacts() {
-    model.getContacts().observe(this, resource -> {
-      Log.d(TAG, "onCreate: " + resource);
-      contactListAdapter.setContactList((List<Contact>) resource.data);
-      contactListAdapter.notifyDataSetChanged();
+    ContactListFragment contactDetailFragment = (ContactListFragment) getSupportFragmentManager()
+        .findFragmentByTag(ContactListFragment.TAG);
+    if (contactDetailFragment == null) {
+      getSupportFragmentManager()
+          .beginTransaction()
+          .add(R.id.frame_layout, ContactListFragment.newInstance(), ContactListFragment.TAG)
+          .commit();
+    }
+    contactViewModel = obtainViewModel(this, viewModelFactory);
+    contactViewModel.getContactId().observe(this, new Observer<Integer>() {
+      @Override
+      public void onChanged(@Nullable Integer integer) {
+        Toast.makeText(MainActivity.this, "" + integer, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onChanged: " + integer.toString());
+      }
     });
   }
 
-  @Override
-  protected void onStop() {
-    Log.d(TAG, "onStop: ");
-    super.onStop();
+
+  public static ContactViewModel obtainViewModel(FragmentActivity activity,
+      ViewModelFactory viewModelFactory) {
+    ContactViewModel viewModel = ViewModelProviders.of(activity, viewModelFactory)
+        .get(ContactViewModel.class);
+    return viewModel;
   }
 
   @Override
-  protected void onDestroy() {
-    Log.d(TAG, "onDestroy: ");
-    super.onDestroy();
-  }
-
-  @Override
-  protected void onRestart() {
-    Log.d(TAG, "onRestart: ");
-    super.onRestart();
-  }
-
-  @Override
-  protected void onResume() {
-    Log.d(TAG, "onResume: ");
-    super.onResume();
-  }
-
-  @Override
-  protected void onStart() {
-    Log.d(TAG, "onStart: ");
-    super.onStart();
+  public AndroidInjector<Fragment> supportFragmentInjector() {
+    return fragmentDispatchingAndroidInjector;
   }
 }
