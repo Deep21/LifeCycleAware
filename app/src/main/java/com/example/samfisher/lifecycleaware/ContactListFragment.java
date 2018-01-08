@@ -1,5 +1,8 @@
 package com.example.samfisher.lifecycleaware;
 
+import static com.example.samfisher.lifecycleaware.di.Status.ERROR;
+import static com.example.samfisher.lifecycleaware.di.Status.SUCCESS;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,10 +17,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.example.samfisher.lifecycleaware.ContactListAdapter.OnItemClickListener;
+import com.example.samfisher.lifecycleaware.di.Resource;
+import com.example.samfisher.lifecycleaware.di.Status;
 import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
 import dagger.android.support.AndroidSupportInjection;
 import java.util.List;
 import javax.inject.Inject;
+import retrofit2.Response;
+import timber.log.Timber;
 
 
 /**
@@ -50,7 +57,8 @@ public class ContactListFragment extends Fragment {
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_contact_list, container, false);
     binder = ButterKnife.bind(this, v);
     setupContactListView();
@@ -70,34 +78,50 @@ public class ContactListFragment extends Fragment {
     observeContacts();
   }
 
+  /**
+   *
+   */
   private void setupContactListView() {
     recyclerView.setHasFixedSize(true);
     LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
     recyclerView.setLayoutManager(mLayoutManager);
-    contactListAdapter.setOnItemClickListener(new OnItemClickListener() {
-      @Override
-      public void onUserItemClicked(int position) {
-        contactViewModel.setContactId(position);
-      }
-    });
+    contactListAdapter.setOnItemClickListener(position -> contactViewModel.setContactId(position));
     recyclerView.setAdapter(contactListAdapter);
   }
 
+  /**
+   * Observe contact changes
+   *
+   */
   private void observeContacts() {
-    contactViewModel.getContacts().observe(this, resource -> {
-      contactListAdapter.setContactList((List<Contact>) resource.data);
-      contactListAdapter.notifyDataSetChanged();
-    });
+    contactViewModel
+        .getContacts()
+        .observe(this, this::handleState);
   }
 
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-  }
+  /**
+   * @param resource
+   */
+  private void handleState(Resource resource) {
+    switch (resource.status) {
+      case SUCCESS:
+        Timber.i(resource + "");
+        contactListAdapter.setContactList((List<Contact>) resource.data);
+        contactListAdapter.notifyDataSetChanged();
+        break;
 
-  @Override
-  public void onDetach() {
-    super.onDetach();
+      case ERROR:
+        Timber.e(resource + "");
+        break;
+
+      case EMPTY:
+        Timber.i(resource + "");
+        break;
+
+      case LOADING:
+        Timber.e(resource + "");
+        break;
+    }
   }
 
   @Override

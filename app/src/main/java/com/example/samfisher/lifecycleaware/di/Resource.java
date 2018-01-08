@@ -3,6 +3,7 @@ package com.example.samfisher.lifecycleaware.di;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import static com.example.samfisher.lifecycleaware.di.Status.EMPTY;
 import static com.example.samfisher.lifecycleaware.di.Status.ERROR;
 import static com.example.samfisher.lifecycleaware.di.Status.LOADING;
 import static com.example.samfisher.lifecycleaware.di.Status.SUCCESS;
@@ -36,5 +37,9 @@ public class Resource<T> {
 
   public static <T> Resource<T> loading(@Nullable T data) {
     return new Resource<>(LOADING, data, null);
+  }
+
+  public static <T> Resource<T> empty(@Nullable T data) {
+    return new Resource<>(EMPTY, data, null);
   }
 }

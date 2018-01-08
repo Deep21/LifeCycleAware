@@ -2,6 +2,8 @@ package com.example.samfisher.lifecycleaware.di;
 
 import com.example.samfisher.lifecycleaware.Contact;
 
+import com.example.samfisher.lifecycleaware.RealmLiveData;
+import com.example.samfisher.lifecycleaware.Task;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -18,4 +20,5 @@ interface InvoiceApi {
 
   @GET("contact/{id}")
   Observable<Contact> getContact(@Path("id") int id);
+
 }
