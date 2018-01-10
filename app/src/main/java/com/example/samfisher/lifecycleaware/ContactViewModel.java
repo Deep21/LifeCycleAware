@@ -4,9 +4,11 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
-import com.example.samfisher.lifecycleaware.di.InvoiceRepo;
+import com.example.samfisher.lifecycleaware.di.ContactRepository;
 import com.example.samfisher.lifecycleaware.di.Resource;
-import io.reactivex.functions.Consumer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -17,7 +19,7 @@ import javax.inject.Inject;
 public class ContactViewModel extends ViewModel {
 
   private static final String TAG = "ContactViewModel";
-  private InvoiceRepo invoiceRepo;
+  private ContactRepository contactRepository;
   private ContactUseCase contactUseCase;
   private MutableLiveData<Resource<Throwable>> error = new MutableLiveData<>();
   private MediatorLiveData<Resource> tMediatorLiveDatas;
@@ -27,8 +29,8 @@ public class ContactViewModel extends ViewModel {
   private MutableLiveData<Resource<Contact>> data = new MediatorLiveData<>();
 
   @Inject
-  public ContactViewModel(InvoiceRepo invoiceRepo, ContactUseCase contactUseCase) {
-    this.invoiceRepo = invoiceRepo;
+  public ContactViewModel(ContactRepository contactRepository, ContactUseCase contactUseCase) {
+    this.contactRepository = contactRepository;
     this.contactUseCase = contactUseCase;
   }
 
@@ -47,32 +49,37 @@ public class ContactViewModel extends ViewModel {
   }
 
   public void loadContactById(int id) {
-    invoiceRepo.getContact(id).subscribe(
+/*    contactRepository.getContact(id).subscribe(
         s -> data.setValue(Resource.success(s)),
         throwable -> error.setValue(Resource.error(throwable.getMessage(), throwable))
-    );
+    );*/
   }
 
   public void loadContact() {
     listGenericLiveData = new RxLiveData<>();
-    RealmLiveData<Task> taskRealmLiveData = new RealmLiveData<>();
-    listGenericLiveData.addDisposable(
-        contactUseCase
-            .excecute(null)
-            .filter(this::isEmptyValue)
-            .doOnNext(new Consumer<List<Contact>>() {
-              @Override
-              public void accept(List<Contact> contacts) throws Exception {
-                //contactUseCase.excecute();
-              }
-            })
-            .subscribe(
-                contacts -> listGenericLiveData.setValue(Resource.success(contacts)),
-                throwable -> error.setValue(Resource.error(throwable.getMessage(), throwable))
-            )
-    );
+    contactUseCase.excecute(null)
+        .filter(this::isEmptyValue)
+        .doOnSubscribe(this::handleDisposable)
+        .doAfterTerminate(this::notifyOnFinish)
+        .subscribe(this::notifyOnSuccess, this::notifyOnError);
+
   }
 
+  private void handleDisposable(Disposable disposable) {
+    listGenericLiveData.addDisposable(disposable);
+  }
+
+  private void notifyOnSuccess(List<Contact> contacts) {
+    listGenericLiveData.setValue(Resource.success(contacts));
+  }
+
+  private void notifyOnError(Throwable throwable) {
+    error.setValue(Resource.error(throwable.getMessage(), throwable));
+  }
+
+  private void notifyOnFinish() {
+    listGenericLiveData.setValue(Resource.loading(null));
+  }
 
   private boolean isEmptyValue(List<Contact> emptyValue) {
     if (emptyValue.isEmpty()) {

@@ -1,29 +1,24 @@
-package com.example.samfisher.lifecycleaware;
+package com.example.samfisher.lifecycleaware.view;
 
-import static com.example.samfisher.lifecycleaware.di.Status.ERROR;
-import static com.example.samfisher.lifecycleaware.di.Status.SUCCESS;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.example.samfisher.lifecycleaware.ContactListAdapter.OnItemClickListener;
+import com.example.samfisher.lifecycleaware.Contact;
+import com.example.samfisher.lifecycleaware.ContactViewModel;
+import com.example.samfisher.lifecycleaware.R;
 import com.example.samfisher.lifecycleaware.di.Resource;
-import com.example.samfisher.lifecycleaware.di.Status;
 import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
 import dagger.android.support.AndroidSupportInjection;
 import java.util.List;
 import javax.inject.Inject;
-import retrofit2.Response;
 import timber.log.Timber;
 
 

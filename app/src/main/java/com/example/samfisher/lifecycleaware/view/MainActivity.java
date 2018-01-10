@@ -1,4 +1,4 @@
-package com.example.samfisher.lifecycleaware;
+package com.example.samfisher.lifecycleaware.view;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import butterknife.ButterKnife;
+import com.example.samfisher.lifecycleaware.ContactViewModel;
+import com.example.samfisher.lifecycleaware.R;
 import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;

@@ -1,8 +1,7 @@
-package com.example.samfisher.lifecycleaware;
+package com.example.samfisher.lifecycleaware.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -11,10 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SimpleAdapter.ViewBinder;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.example.samfisher.lifecycleaware.Contact;
+import com.example.samfisher.lifecycleaware.ContactViewModel;
+import com.example.samfisher.lifecycleaware.R;
 import com.example.samfisher.lifecycleaware.di.ViewModelFactory;
 import javax.inject.Inject;
 

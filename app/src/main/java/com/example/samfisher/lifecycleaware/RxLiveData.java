@@ -14,6 +14,7 @@ public class RxLiveData<T> extends LiveData<T> {
   private CompositeDisposable compositeDisposable;
 
   public RxLiveData() {
+    compositeDisposable = new CompositeDisposable();
   }
 
   @Override
@@ -23,7 +24,6 @@ public class RxLiveData<T> extends LiveData<T> {
 
   @Override
   protected void onActive() {
-    compositeDisposable = new CompositeDisposable();
     super.onActive();
   }
 
@@ -34,8 +34,8 @@ public class RxLiveData<T> extends LiveData<T> {
   }
 
   private void dispose() {
-    Log.d("GENERIC", "dispose: ");
     if (!compositeDisposable.isDisposed()) {
+      Log.d("RxLiveData", "dispose: ");
       compositeDisposable.dispose();
     }
   }
