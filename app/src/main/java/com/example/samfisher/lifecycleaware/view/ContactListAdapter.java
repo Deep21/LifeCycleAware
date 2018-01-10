@@ -1,4 +1,4 @@
-package com.example.samfisher.lifecycleaware;
+package com.example.samfisher.lifecycleaware.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.example.samfisher.lifecycleaware.Contact;
+import com.example.samfisher.lifecycleaware.ContactViewModel;
+import com.example.samfisher.lifecycleaware.R;
 import java.util.List;
 import javax.inject.Inject;
 

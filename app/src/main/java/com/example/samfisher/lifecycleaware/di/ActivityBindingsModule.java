@@ -1,8 +1,8 @@
 package com.example.samfisher.lifecycleaware.di;
 
-import com.example.samfisher.lifecycleaware.ContactDetailFragment;
-import com.example.samfisher.lifecycleaware.ContactListFragment;
-import com.example.samfisher.lifecycleaware.MainActivity;
+import com.example.samfisher.lifecycleaware.view.ContactDetailFragment;
+import com.example.samfisher.lifecycleaware.view.ContactListFragment;
+import com.example.samfisher.lifecycleaware.view.MainActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
