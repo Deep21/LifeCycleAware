@@ -1,10 +1,12 @@
 package com.example.samfisher.lifecycleaware.view;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,13 +49,11 @@ public class ContactListFragment extends Fragment {
 
   // TODO: Rename and change types and number of parameters
   public static ContactListFragment newInstance() {
-    ContactListFragment fragment = new ContactListFragment();
-    return fragment;
+    return new ContactListFragment();
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_contact_list, container, false);
     binder = ButterKnife.bind(this, v);
     setupContactListView();
@@ -70,7 +70,13 @@ public class ContactListFragment extends Fragment {
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     contactViewModel = MainActivity.obtainViewModel(getActivity(), viewModelFactory);
+    Log.d(TAG, "onActivityCreated: ");
     observeContacts();
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
   }
 
   /**
@@ -86,7 +92,6 @@ public class ContactListFragment extends Fragment {
 
   /**
    * Observe contact changes
-   *
    */
   private void observeContacts() {
     contactViewModel
@@ -100,17 +105,15 @@ public class ContactListFragment extends Fragment {
   private void handleState(Resource resource) {
     switch (resource.status) {
       case SUCCESS:
-        Timber.i(resource + "");
+        Log.d(TAG, "handleState: ");
         contactListAdapter.setContactList((List<Contact>) resource.data);
         contactListAdapter.notifyDataSetChanged();
         break;
 
       case ERROR:
-        Timber.e(resource + "");
         break;
 
       case EMPTY:
-        Timber.i(resource + "");
         break;
 
       case LOADING:

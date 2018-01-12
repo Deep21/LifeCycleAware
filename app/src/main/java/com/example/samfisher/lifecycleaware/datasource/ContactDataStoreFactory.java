@@ -1,7 +1,9 @@
 package com.example.samfisher.lifecycleaware.datasource;
 
 import com.example.samfisher.lifecycleaware.Contact;
+import com.example.samfisher.lifecycleaware.Task;
 import com.example.samfisher.lifecycleaware.di.InvoiceApi;
+import io.realm.RealmResults;
 import javax.inject.Inject;
 
 /**
@@ -17,11 +19,11 @@ public class ContactDataStoreFactory {
     this.invoiceApi = invoiceApi;
   }
 
-  public LocalContactDataStore createLocalStore() {
+  public ContactLocalDataStore<RealmResults<Task>> createLocalStore() {
     return new LocalContactDataStore();
   }
 
-  public ContactRemoteDataStore<Contact> createRemoteDataStore() {
+  public ContactRemoteDataStore<Contact> create() {
     return new RemoteContactDataStore(invoiceApi);
   }
 }

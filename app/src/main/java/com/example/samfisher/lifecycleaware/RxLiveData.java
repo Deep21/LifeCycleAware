@@ -24,12 +24,13 @@ public class RxLiveData<T> extends LiveData<T> {
 
   @Override
   protected void onActive() {
+    Log.d("CompositeDisposable", "onActive: ");
     super.onActive();
   }
 
   @Override
   protected void onInactive() {
-    dispose();
+    //dispose();
     super.onInactive();
   }
 
