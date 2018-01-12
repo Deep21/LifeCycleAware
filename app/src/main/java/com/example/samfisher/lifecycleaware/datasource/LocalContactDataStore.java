@@ -1,10 +1,8 @@
 package com.example.samfisher.lifecycleaware.datasource;
 
-import com.example.samfisher.lifecycleaware.Contact;
 import com.example.samfisher.lifecycleaware.Task;
 import io.reactivex.Observable;
 import io.realm.RealmResults;
-import java.util.List;
 import javax.inject.Inject;
 
 /**
@@ -26,8 +24,6 @@ public class LocalContactDataStore implements ContactLocalDataStore<RealmResults
   public Observable<RealmResults<Task>> getContact(int id) {
     return null;
   }
-
-
 
 
 /*

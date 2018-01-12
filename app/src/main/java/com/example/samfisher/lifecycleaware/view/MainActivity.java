@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,30 +35,23 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
-    ContactListFragment contactDetailFragment = (ContactListFragment) getSupportFragmentManager()
-        .findFragmentByTag(ContactListFragment.TAG);
-    if (contactDetailFragment == null) {
-      getSupportFragmentManager()
-          .beginTransaction()
+    ContactListFragment contactListFragment = (ContactListFragment) getSupportFragmentManager().findFragmentByTag(ContactListFragment.TAG);
+    if (contactListFragment == null) {
+      getSupportFragmentManager().beginTransaction()
           .add(R.id.frame_layout, ContactListFragment.newInstance(), ContactListFragment.TAG)
           .commit();
     }
     contactViewModel = obtainViewModel(this, viewModelFactory);
-    contactViewModel.getContactId().observe(this, new Observer<Integer>() {
-      @Override
-      public void onChanged(@Nullable Integer integer) {
-        Toast.makeText(MainActivity.this, "" + integer, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onChanged: " + integer.toString());
-      }
+    contactViewModel.getContactId().observe(this, integer -> {
+      Toast.makeText(MainActivity.this, "" + integer, Toast.LENGTH_SHORT).show();
+      Log.d(TAG, "onChanged: " + integer.toString());
     });
   }
 
 
   public static ContactViewModel obtainViewModel(FragmentActivity activity,
       ViewModelFactory viewModelFactory) {
-    ContactViewModel viewModel = ViewModelProviders.of(activity, viewModelFactory)
-        .get(ContactViewModel.class);
-    return viewModel;
+    return ViewModelProviders.of(activity, viewModelFactory).get(ContactViewModel.class);
   }
 
   @Override

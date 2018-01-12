@@ -4,11 +4,10 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
-import com.example.samfisher.lifecycleaware.di.ContactRepository;
 import com.example.samfisher.lifecycleaware.di.Resource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -19,18 +18,17 @@ import javax.inject.Inject;
 public class ContactViewModel extends ViewModel {
 
   private static final String TAG = "ContactViewModel";
-  private ContactRepository contactRepository;
-  private ContactUseCase contactUseCase;
+  private ContactResultInteractor contactUseCase;
   private MutableLiveData<Resource<Throwable>> error = new MutableLiveData<>();
   private MediatorLiveData<Resource> tMediatorLiveDatas;
   private MediatorLiveData<Resource> contactsListMediatorLiveData;
-  private RxLiveData<Resource<List<Contact>>> listGenericLiveData;
+  //  private MutableLiveData<Resource<List<Contact>>> listGenericLiveData = new MutableLiveData<>();
+  private RxLiveData<Resource<List<Contact>>> listGenericLiveData = new RxLiveData<>();
   private SingleLiveEvent<Integer> contactId = new SingleLiveEvent<>();
   private MutableLiveData<Resource<Contact>> data = new MediatorLiveData<>();
 
   @Inject
-  public ContactViewModel(ContactRepository contactRepository, ContactUseCase contactUseCase) {
-    this.contactRepository = contactRepository;
+  public ContactViewModel(ContactResultInteractor contactUseCase) {
     this.contactUseCase = contactUseCase;
   }
 
@@ -56,13 +54,10 @@ public class ContactViewModel extends ViewModel {
   }
 
   public void loadContact() {
-    listGenericLiveData = new RxLiveData<>();
-    contactUseCase.excecute(null)
-        .filter(this::isEmptyValue)
+    contactUseCase.getList()
         .doOnSubscribe(this::handleDisposable)
-        .doAfterTerminate(this::notifyOnFinish)
-        .subscribe(this::notifyOnSuccess, this::notifyOnError);
-
+        .subscribe(contacts -> listGenericLiveData.setValue(Resource.success(contacts)),
+            this::notifyOnError);
   }
 
   private void handleDisposable(Disposable disposable) {
@@ -70,6 +65,7 @@ public class ContactViewModel extends ViewModel {
   }
 
   private void notifyOnSuccess(List<Contact> contacts) {
+    Log.d(TAG, "notifyOnSuccess: " + contacts);
     listGenericLiveData.setValue(Resource.success(contacts));
   }
 
@@ -88,10 +84,8 @@ public class ContactViewModel extends ViewModel {
     return true;
   }
 
-
   public MediatorLiveData<Resource> getContacts() {
     if (contactsListMediatorLiveData == null) {
-      loadContact();
       contactsListMediatorLiveData = new MediatorLiveData<>();
       //success
       contactsListMediatorLiveData.addSource(listGenericLiveData,
@@ -99,7 +93,9 @@ public class ContactViewModel extends ViewModel {
       //error handling
       contactsListMediatorLiveData
           .addSource(error, resource -> contactsListMediatorLiveData.setValue(resource));
+      loadContact();
     }
+
     return contactsListMediatorLiveData;
   }
 
