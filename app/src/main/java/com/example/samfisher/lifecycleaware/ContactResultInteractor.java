@@ -12,7 +12,7 @@ import javax.inject.Inject;
  * Created by Samfisher on 07/01/2018.
  */
 
-public class ContactResultInteractor implements ContactInteractorInterface {
+public class ContactResultInteractor implements ContactInteractorInterface<Contact> {
 
   private ContactRepository contactRepository;
 
@@ -28,4 +28,13 @@ public class ContactResultInteractor implements ContactInteractorInterface {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
   }
+
+  @Override
+  public Observable<Contact> get(int contactId) {
+    return contactRepository.getContact(contactId)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
+
+  }
+
 }

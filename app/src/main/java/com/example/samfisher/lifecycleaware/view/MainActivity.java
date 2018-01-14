@@ -42,12 +42,21 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
           .commit();
     }
     contactViewModel = obtainViewModel(this, viewModelFactory);
-    contactViewModel.getContactId().observe(this, integer -> {
-      Toast.makeText(MainActivity.this, "" + integer, Toast.LENGTH_SHORT).show();
-      Log.d(TAG, "onChanged: " + integer.toString());
-    });
+    observeRecyclerViewClick();
   }
 
+  private void observeRecyclerViewClick()
+  {
+    contactViewModel.getContactId().observe(this, integer -> {
+
+/*      ContactDetailFragment contactDetailFragment = (ContactDetailFragment) getSupportFragmentManager().findFragmentByTag(ContactDetailFragment.TAG);
+      if (contactDetailFragment == null) {
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.frame_layout, ContactDetailFragment.newInstance(), ContactDetailFragment.TAG)
+            .commit();
+      }*/
+    });
+  }
 
   public static ContactViewModel obtainViewModel(FragmentActivity activity,
       ViewModelFactory viewModelFactory) {

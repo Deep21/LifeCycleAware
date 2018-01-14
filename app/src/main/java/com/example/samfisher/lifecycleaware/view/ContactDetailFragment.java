@@ -34,21 +34,10 @@ public class ContactDetailFragment extends Fragment {
   FloatingActionButton fab;
   @Inject
   ViewModelFactory viewModelFactory;
-
-  // TODO: Rename and change types of parameters
-  private String mParam1;
-  private String mParam2;
   ContactViewModel model;
   private Unbinder binder;
 
-  private void observeOnContactSelected() {
-    model.getContactById().observe(this,
-        resource -> Log
-            .d(TAG, "observeOnContactSelected: " + ((Contact) resource.data).getCompany()));
-  }
-
   public ContactDetailFragment() {
-    // Required empty public constructor
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.example.samfisher.lifecycleaware;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -9,7 +10,7 @@ import io.reactivex.disposables.Disposable;
  * Created by Samfisher on 29/11/2017.
  */
 
-public class RxLiveData<T> extends LiveData<T> {
+public class RxLiveData<T> extends MutableLiveData<T> {
 
   private CompositeDisposable compositeDisposable;
 
@@ -18,7 +19,7 @@ public class RxLiveData<T> extends LiveData<T> {
   }
 
   @Override
-  protected void setValue(T value) {
+  public void setValue(T value) {
     super.setValue(value);
   }
 

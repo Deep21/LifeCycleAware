@@ -1,6 +1,5 @@
 package com.example.samfisher.lifecycleaware.domain;
 
-import com.example.samfisher.lifecycleaware.Contact;
 import io.reactivex.Observable;
 import java.util.List;
 
@@ -10,6 +9,8 @@ import java.util.List;
 
 public interface ContactInteractorInterface<T> {
 
-  Observable<List<Contact>> getList();
+  Observable<List<T>> getList();
+
+  Observable<T> get(int i);
 
 }

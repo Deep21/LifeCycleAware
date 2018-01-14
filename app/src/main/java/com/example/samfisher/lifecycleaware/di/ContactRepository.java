@@ -30,8 +30,14 @@ public class ContactRepository {
   }
 
   public Observable<List<Contact>> getContacts() {
-    return dataStoreFactory.create().getList();
+    return dataStoreFactory
+        .create()
+        .getList();
+  }
 
+  public Observable<Contact> getContact(int contactId) {
+    return dataStoreFactory
+        .create().getContact(contactId);
   }
 
 }
