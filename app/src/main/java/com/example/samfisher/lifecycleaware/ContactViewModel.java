@@ -22,7 +22,6 @@ public class ContactViewModel extends ViewModel {
   private MutableLiveData<Resource<Throwable>> error = new MutableLiveData<>();
   private MediatorLiveData<Resource> tMediatorLiveDatas;
   private MediatorLiveData<Resource> contactsListMediatorLiveData;
-  //  private MutableLiveData<Resource<List<Contact>>> listGenericLiveData = new MutableLiveData<>();
   private RxLiveData<Resource<List<Contact>>> listGenericLiveData = new RxLiveData<>();
   private SingleLiveEvent<Integer> contactId = new SingleLiveEvent<>();
   private MutableLiveData<Resource<Contact>> data = new MediatorLiveData<>();
@@ -47,17 +46,18 @@ public class ContactViewModel extends ViewModel {
   }
 
   public void loadContactById(int id) {
-/*    contactRepository.getContact(id).subscribe(
-        s -> data.setValue(Resource.success(s)),
-        throwable -> error.setValue(Resource.error(throwable.getMessage(), throwable))
-    );*/
+    contactUseCase.
+        get(id)
+        .subscribe(
+            s -> data.setValue(Resource.success(s)),
+            throwable -> error.setValue(Resource.error(throwable.getMessage(), throwable))
+        );
   }
 
   public void loadContact() {
     contactUseCase.getList()
         .doOnSubscribe(this::handleDisposable)
-        .subscribe(contacts -> listGenericLiveData.setValue(Resource.success(contacts)),
-            this::notifyOnError);
+        .subscribe(this::notifyOnSuccess, this::notifyOnError);
   }
 
   private void handleDisposable(Disposable disposable) {
@@ -95,7 +95,6 @@ public class ContactViewModel extends ViewModel {
           .addSource(error, resource -> contactsListMediatorLiveData.setValue(resource));
       loadContact();
     }
-
     return contactsListMediatorLiveData;
   }
 
