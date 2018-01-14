@@ -1,15 +1,11 @@
 package com.example.samfisher.lifecycleaware.view;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import com.example.samfisher.lifecycleaware.ContactViewModel;
 import com.example.samfisher.lifecycleaware.R;
@@ -45,21 +41,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     observeRecyclerViewClick();
   }
 
-  private void observeRecyclerViewClick()
-  {
+  private void observeRecyclerViewClick() {
     contactViewModel.getContactId().observe(this, integer -> {
-
-/*      ContactDetailFragment contactDetailFragment = (ContactDetailFragment) getSupportFragmentManager().findFragmentByTag(ContactDetailFragment.TAG);
-      if (contactDetailFragment == null) {
-        getSupportFragmentManager().beginTransaction()
-            .replace(R.id.frame_layout, ContactDetailFragment.newInstance(), ContactDetailFragment.TAG)
-            .commit();
-      }*/
+      Intent intent = new Intent(this, DetailContactActivity.class);
+      intent.putExtra(DetailContactActivity.EXTRA_TASK_ID, integer.intValue());
+      startActivityForResult(intent, 100);
     });
   }
 
-  public static ContactViewModel obtainViewModel(FragmentActivity activity,
-      ViewModelFactory viewModelFactory) {
+  public static ContactViewModel obtainViewModel(FragmentActivity activity, ViewModelFactory viewModelFactory) {
     return ViewModelProviders.of(activity, viewModelFactory).get(ContactViewModel.class);
   }
 
