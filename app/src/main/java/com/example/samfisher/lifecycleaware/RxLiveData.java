@@ -1,6 +1,5 @@
 package com.example.samfisher.lifecycleaware;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 import io.reactivex.disposables.CompositeDisposable;
@@ -12,10 +11,9 @@ import io.reactivex.disposables.Disposable;
 
 public class RxLiveData<T> extends MutableLiveData<T> {
 
-  private CompositeDisposable compositeDisposable;
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
   public RxLiveData() {
-    compositeDisposable = new CompositeDisposable();
   }
 
   @Override

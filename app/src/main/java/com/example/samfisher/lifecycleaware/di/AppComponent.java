@@ -12,21 +12,22 @@ import dagger.android.AndroidInjectionModule;
  */
 @Singleton
 @Component(modules = {
-        AndroidInjectionModule.class,
-        AppModule.class,
-        NetModule.class,
-        ActivityBindingsModule.class})
+    AndroidInjectionModule.class,
+    AppModule.class,
+    NetModule.class,
+    ActivityBindingsModule.class,
+    CreditDashboardModule.class})
 public interface AppComponent {
 
-    @Component.Builder
-    interface Builder {
+  @Component.Builder
+  interface Builder {
 
-        @BindsInstance
-        Builder application(App application);
+    @BindsInstance
+    Builder application(App application);
 
-        AppComponent build();
-    }
+    AppComponent build();
+  }
 
-    void inject(App app);
+  void inject(App app);
 
 }
