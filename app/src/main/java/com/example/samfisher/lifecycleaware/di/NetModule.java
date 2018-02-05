@@ -45,7 +45,7 @@ public class NetModule {
         return new Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl("http://192.168.1.15/api/web/app_dev.php/api/v1/")
+                .baseUrl("http://192.168.190.2/api/web/app_dev.php/api/v1/")
                 .client(okHttpClient)
                 .build();
     }

@@ -11,13 +11,13 @@ public class MyLiveData extends LiveData<String> {
 
     @Override
     protected void onActive() {
-        Log.d("MainActivity", "onActive: ");
+        Log.d("TaskListActivity", "onActive: ");
         super.onActive();
     }
 
     @Override
     protected void onInactive() {
-        Log.d("MainActivity", "onInactive: ");
+        Log.d("TaskListActivity", "onInactive: ");
         super.onInactive();
     }
 

@@ -1,10 +1,17 @@
 package com.example.samfisher.lifecycleaware.di;
 
-import com.example.samfisher.lifecycleaware.view.DetailContactFragment;
-import com.example.samfisher.lifecycleaware.view.ContactListFragment;
-import com.example.samfisher.lifecycleaware.view.MainActivity;
+import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import com.example.samfisher.lifecycleaware.view.AddTaskActivity;
+import com.example.samfisher.lifecycleaware.view.TaskAddFragment;
+import com.example.samfisher.lifecycleaware.view.DetailTaskActivity;
+import com.example.samfisher.lifecycleaware.view.DetailTaskFragment;
+import com.example.samfisher.lifecycleaware.view.TaskListFragment;
+import com.example.samfisher.lifecycleaware.view.TaskListActivity;
 
 import dagger.Module;
+import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 
 /**
@@ -14,16 +21,33 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 abstract class ActivityBindingsModule {
 
-  @ActivityScoped
+  @PerActivity
   @ContributesAndroidInjector
-  abstract MainActivity bindActivity();
+  abstract TaskListActivity bindActivity();
 
-  @ActivityScoped
+  @PerFragment
   @ContributesAndroidInjector
-  abstract ContactListFragment bindContactListFragment();
+  abstract TaskListFragment bindContactListFragment();
 
-  @ActivityScoped
+  @PerActivity
   @ContributesAndroidInjector
-  abstract DetailContactFragment bindContactDetailFragment();
+  abstract DetailTaskActivity bindDetailContactActivity();
 
+  @PerFragment
+  @ContributesAndroidInjector
+  abstract DetailTaskFragment bindDetailContactFragment();
+
+  @PerActivity
+  @ContributesAndroidInjector
+  abstract AddTaskActivity bindAddContactDetailFragment();
+
+  @PerFragment
+  @ContributesAndroidInjector
+  abstract TaskAddFragment bindContactAddFragment();
+
+  @Provides
+  @PerActivity
+  static FragmentManager activityFragmentManager(FragmentActivity activity) {
+    return activity.getSupportFragmentManager();
+  }
 }
