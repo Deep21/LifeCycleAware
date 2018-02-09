@@ -6,6 +6,7 @@ import com.example.samfisher.lifecycleaware.datasource.TaskLocalDataStore;
 import com.example.samfisher.lifecycleaware.mapper.TaskMapper;
 import com.example.samfisher.lifecycleaware.model.Task;
 import com.example.samfisher.lifecycleaware.realm.RealmTask;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,14 +68,18 @@ public class TaskRepository {
 
   /**
    * Search task
-   *
-   * @param keyword
-   * @return
    */
-  public Observable<List<TaskEntity>> search(String keyword) {
+  public Flowable<List<TaskEntity>> search(String keyword) {
     return dataStoreFactory
         .create()
         .search(keyword)
+        .map(tasks -> taskMapper.mapToList(tasks));
+  }
+
+  public Observable<List<TaskEntity>> searchB(String keyword) {
+    return dataStoreFactory
+        .create()
+        .searchs(keyword)
         .map(tasks -> taskMapper.mapToList(tasks));
   }
 

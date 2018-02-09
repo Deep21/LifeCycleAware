@@ -3,6 +3,7 @@ package com.example.samfisher.lifecycleaware.datasource;
 import com.example.samfisher.lifecycleaware.di.InvoiceApi;
 import com.example.samfisher.lifecycleaware.model.Task;
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import java.util.List;
 import javax.inject.Inject;
@@ -45,7 +46,12 @@ public class RemoteTaskDataStore implements TaskRemoteDataStore<Task> {
     return null;
   }
 
-  public Observable<List<Task>> search(String s){
+  public Flowable<List<Task>> search(String s){
     return invoiceApi.search(s);
+  }
+
+  @Override
+  public Observable<List<Task>> searchs(String keyword) {
+    return invoiceApi.searchs(keyword);
   }
 }

@@ -2,6 +2,7 @@ package com.example.samfisher.lifecycleaware.domain.interactor;
 
 import com.example.samfisher.lifecycleaware.TaskEntity;
 import com.example.samfisher.lifecycleaware.data.TaskRepository;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -39,8 +40,14 @@ public class TaskRetrieveInteractor implements TaskInteractorInterface<TaskEntit
     return taskRepository.getTasks().observeOn(AndroidSchedulers.mainThread());
   }
 
-  public Observable<List<TaskEntity>> search(String keyword) {
+  public Flowable<List<TaskEntity>> search(String keyword) {
     return taskRepository.search(keyword)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  public Observable<List<TaskEntity>> searchB(String keyword) {
+    return taskRepository.searchB(keyword)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
   }

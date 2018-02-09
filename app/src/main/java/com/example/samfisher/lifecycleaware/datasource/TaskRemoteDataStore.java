@@ -1,6 +1,7 @@
 package com.example.samfisher.lifecycleaware.datasource;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface TaskRemoteDataStore<T> {
 
   Completable edit(T t);
 
-  Observable<List<T>> search(String keyword);
+  Flowable<List<T>> search(String keyword);
+
+  Observable<List<T>> searchs(String keyword);
 }
