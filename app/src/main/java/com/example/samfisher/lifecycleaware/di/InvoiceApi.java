@@ -1,6 +1,7 @@
 package com.example.samfisher.lifecycleaware.di;
 
 import com.example.samfisher.lifecycleaware.model.Task;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import java.util.List;
 import retrofit2.http.Body;
@@ -26,5 +27,9 @@ public interface InvoiceApi {
 
   @FormUrlEncoded
   @POST("task/search")
-  Observable<List<Task>> search(@Field("search") String search);
+  Flowable<List<Task>> search(@Field("search") String search);
+
+  @FormUrlEncoded
+  @POST("task/search")
+  Observable<List<Task>> searchs(@Field("search") String search);
 }

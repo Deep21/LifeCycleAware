@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -53,12 +54,12 @@ public class TaskListActivity extends AppCompatActivity implements HasSupportFra
     setupNavigationDrawer();
     setUpFab();
 
-    TaskListFragment taskListFragment = (TaskListFragment) getSupportFragmentManager()
-        .findFragmentByTag(TaskListFragment.TAG);
+    SearchTaskFragment taskListFragment = (SearchTaskFragment) getSupportFragmentManager()
+        .findFragmentByTag(SearchTaskFragment.TAG);
 
     if (taskListFragment == null) {
       getSupportFragmentManager().beginTransaction()
-          .add(R.id.frame_layout, TaskListFragment.newInstance(), TaskListFragment.TAG)
+          .add(R.id.frame_layout, SearchTaskFragment.newInstance(), SearchTaskFragment.TAG)
           .commit();
     }
 

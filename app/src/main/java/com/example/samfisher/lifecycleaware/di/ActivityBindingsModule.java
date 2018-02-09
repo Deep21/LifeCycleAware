@@ -1,15 +1,14 @@
 package com.example.samfisher.lifecycleaware.di;
 
-import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import com.example.samfisher.lifecycleaware.view.AddTaskActivity;
-import com.example.samfisher.lifecycleaware.view.TaskAddFragment;
 import com.example.samfisher.lifecycleaware.view.DetailTaskActivity;
 import com.example.samfisher.lifecycleaware.view.DetailTaskFragment;
-import com.example.samfisher.lifecycleaware.view.TaskListFragment;
+import com.example.samfisher.lifecycleaware.view.SearchTaskFragment;
+import com.example.samfisher.lifecycleaware.view.TaskAddFragment;
 import com.example.samfisher.lifecycleaware.view.TaskListActivity;
-
+import com.example.samfisher.lifecycleaware.view.TaskListFragment;
 import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
@@ -44,6 +43,11 @@ abstract class ActivityBindingsModule {
   @PerFragment
   @ContributesAndroidInjector
   abstract TaskAddFragment bindContactAddFragment();
+
+
+  @PerFragment
+  @ContributesAndroidInjector
+  abstract SearchTaskFragment bindSearchTaskFragment();
 
   @Provides
   @PerActivity
