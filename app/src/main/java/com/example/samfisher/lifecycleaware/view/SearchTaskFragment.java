@@ -1,5 +1,6 @@
 package com.example.samfisher.lifecycleaware.view;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.example.samfisher.lifecycleaware.R;
 import com.example.samfisher.lifecycleaware.TaskEntity;
+import com.example.samfisher.lifecycleaware.di.Resource;
 import com.example.samfisher.lifecycleaware.view.adapter.TaskListAdapter;
 import com.example.samfisher.lifecycleaware.viewmodel.TaskDetailViewModel;
 import com.example.samfisher.lifecycleaware.viewmodel.TaskDetailViewModelFactory;
@@ -32,6 +34,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import java.util.List;
+import java.util.Observable;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
@@ -71,15 +74,36 @@ public class SearchTaskFragment extends Fragment {
    * Set up search view
    */
   private void setUpSearchView() {
+    /*
     Disposable disposable = RxSearchView.queryTextChanges(searchView)
         .debounce(300, TimeUnit.MILLISECONDS)
-        .switchMap(charSequence -> detailViewModel.getT(charSequence).toObservable())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(taskEntities -> {
-          detailViewModel.setData(taskEntities);
-          Log.d(TAG, "setUpSearchView: " + taskEntities);
+        .subscribe(new Consumer<CharSequence>() {
+          @Override
+          public void accept(CharSequence charSequence) throws Exception {
+
+          }
         });
-    compositeDisposable.add(disposable);
+    compositeDisposable.add(disposable);*/
+    searchView.setOnQueryTextListener(new OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        return false;
+      }
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        source.onNext(newText);
+        
+        return false;
+      }
+    });
+    source
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .subscribe(s -> {
+          Log.d(TAG, "setUpSearchView: " + s);
+        });
   }
 
   /**
@@ -127,8 +151,14 @@ public class SearchTaskFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
     setUpSearchView();
     setupContactListView();
+    /*
     observeSearchSequence();
-
+    detailViewModel.searchTask().observe(this, new Observer<Resource>() {
+      @Override
+      public void onChanged(@Nullable Resource resource) {
+        Log.d(TAG, "onChanged: " + resource);
+      }
+    });*/
   }
 
   @Override
