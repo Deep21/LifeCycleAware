@@ -66,7 +66,7 @@ public class TaskAddFragment extends Fragment {
 
   }
 
-  @OnClick(R.id.button)
+
   public void onClick() {
     Task task = new Task();
     task.setTitle(title.getText().toString());

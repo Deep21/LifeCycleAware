@@ -1,5 +1,6 @@
 package com.example.samfisher.lifecycleaware.view.adapter;
 
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import com.example.samfisher.lifecycleaware.TaskEntity;
 import java.util.List;
@@ -30,11 +31,17 @@ public class SearchTaskListDiffCallback extends DiffUtil.Callback {
 
   @Override
   public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-    return false;
+    return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
   }
 
   @Override
   public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-    return false;
+    return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
+  }
+
+  @Nullable
+  @Override
+  public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+    return super.getChangePayload(oldItemPosition, newItemPosition);
   }
 }

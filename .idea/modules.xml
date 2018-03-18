@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/LifeCycleAware.iml" filepath="$PROJECT_DIR$/LifeCycleAware.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/task/task.iml" filepath="$PROJECT_DIR$/task/task.iml" />
-      <module fileurl="file://C:\Users\deept\AndroidStudioProjects\LifeCycleAware\task\task.iml" filepath="C:\Users\deept\AndroidStudioProjects\LifeCycleAware\task\task.iml" />
     </modules>
   </component>
 </project>

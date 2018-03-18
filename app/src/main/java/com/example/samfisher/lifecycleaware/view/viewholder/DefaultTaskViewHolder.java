@@ -8,7 +8,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.samfisher.lifecycleaware.R;
 import com.example.samfisher.lifecycleaware.TaskEntity;
-import com.example.samfisher.lifecycleaware.view.adapter.TaskListAdapter.OnItemClickListener;
+import com.example.samfisher.lifecycleaware.view.adapter.OnItemClickListener;
+
 
 /**
  * Created by Samfisher on 30/01/2018.

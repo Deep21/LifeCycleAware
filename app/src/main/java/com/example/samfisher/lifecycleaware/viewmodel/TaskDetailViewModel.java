@@ -23,6 +23,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -42,21 +43,15 @@ public class TaskDetailViewModel extends ViewModel {
   private MutableLiveData<List<TaskEntity>> data = new MutableLiveData<>();
   private MediatorLiveData<Resource> tMediatorLiveDatas;
   private RxLiveData<Resource<TaskEntity>> listGenericLiveData = new RxLiveData<>();
-
-  public void setRxSearchLiveData(
-      RxLiveData<Resource> rxSearchLiveData) {
-    this.rxSearchLiveData = rxSearchLiveData;
-  }
-
-  private RxLiveData<Resource> rxSearchLiveData = new RxLiveData<>();
+  private PublishSubject<String> publishSubject = PublishSubject.create();
+  private MutableLiveData<Resource<List<TaskEntity>>> resourceMutableLiveData = new MediatorLiveData<>();
+  private MediatorLiveData<Resource> mediatorLiveData = new MediatorLiveData<>();
   private SingleLiveEvent<Integer> taskId = new SingleLiveEvent<>();
-  private MutableLiveData<CharSequence> charSequenceMutableLiveData = new MutableLiveData<>();
-  private MediatorLiveData<Resource> searchMediatorLiveData = new MediatorLiveData<>();
-  private BehaviorSubject<CharSequence> behaviorSubject = BehaviorSubject.create();
 
   @Inject
   public TaskDetailViewModel(TaskRetrieveInteractor taskInteractor) {
     this.taskInteractor = taskInteractor;
+    configureAutoComplete();
   }
 
   public SingleLiveEvent<Integer> getTaskId() {
@@ -85,42 +80,29 @@ public class TaskDetailViewModel extends ViewModel {
         );
   }
 
-  public Flowable<List<TaskEntity>> getT(CharSequence charSequence){
-    return taskInteractor.search(charSequence.toString());
+  public void setPublishSubject(String value) {
+    publishSubject.onNext(value);
   }
-
-  public Flowable<List<TaskEntity>> getSearcheableTask(CharSequence charSequence) {
-    return taskInteractor.search(charSequence.toString());
-  }
-
-  /**
-   *
-   * @param s
-   */
-  public void loadSearchTask(CharSequence s) {
-   taskInteractor
-        .search(s.toString())
-        .subscribe(
-            charSequence -> rxSearchLiveData.postValue(Resource.success(charSequence)),
-            throwable -> error.setValue(Resource.error(throwable.getMessage(), throwable))
-        );
-/*    behaviorSubject
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(charSequence -> Log.d(TAG, "accept: " + charSequence));
- */ }
 
   /**
    * Search task
    */
-  public MediatorLiveData<Resource> searchTask() {
-    /*if (searchLiveData == null) {
-      searchLiveData = new MediatorLiveData<>();
-      searchLiveData.addSource(charSequenceMutableLiveData, this::loadSearchTask);
-    }*/
-    //Log.d(TAG, "searchTask: " + Thread.currentThread().getName());
-    searchMediatorLiveData.addSource(rxSearchLiveData, resource -> searchMediatorLiveData.setValue(resource));
-    return searchMediatorLiveData;
+  public void configureAutoComplete() {
+    publishSubject
+        .debounce(300, TimeUnit.MILLISECONDS)
+        .distinctUntilChanged()
+        .switchMap(s -> taskInteractor.search(s).toObservable()).subscribeOn(Schedulers.io())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(s -> resourceMutableLiveData.setValue(Resource.success(s)), throwable -> Log.d(TAG, "configureAutoComplete: " + throwable));
+  }
+
+  public LiveData<Resource> getSearchLiveData() {
+    if (mediatorLiveData != null) {
+      mediatorLiveData = new MediatorLiveData<>();
+      mediatorLiveData.addSource(resourceMutableLiveData, stringResource -> mediatorLiveData.setValue(stringResource));
+    }
+    return mediatorLiveData;
   }
 
   private void handleDisposable(Disposable disposable) {
@@ -129,11 +111,6 @@ public class TaskDetailViewModel extends ViewModel {
 
   public void setTaskId(int taskId) {
     this.taskId.setValue(taskId);
-  }
-
-  public void setCharSequence(CharSequence charSequence) {
-    //charSequenceMutableLiveData.setValue(charSequence);
-    behaviorSubject.onNext(charSequence);
   }
 
   public MutableLiveData<List<TaskEntity>> getData() {

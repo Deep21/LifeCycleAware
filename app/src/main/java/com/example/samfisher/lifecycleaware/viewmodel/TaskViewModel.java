@@ -1,5 +1,6 @@
 package com.example.samfisher.lifecycleaware.viewmodel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
@@ -12,10 +13,15 @@ import com.example.samfisher.lifecycleaware.di.Resource;
 import com.example.samfisher.lifecycleaware.domain.interactor.TaskRetrieveInteractor;
 import com.example.samfisher.lifecycleaware.model.Task;
 import com.example.samfisher.lifecycleaware.realm.RealmTask;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 import io.realm.RealmResults;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 /**
@@ -31,14 +37,17 @@ public class TaskViewModel extends ViewModel {
   private RxLiveData<Resource<List<TaskEntity>>> rxTaskLiveData = new RxLiveData<>();
   private SingleLiveEvent<Integer> taskId = new SingleLiveEvent<>();
 
+
   @Inject
   public TaskViewModel(TaskRetrieveInteractor taskInteractor) {
     this.taskInteractor = taskInteractor;
+
   }
 
   public SingleLiveEvent<Integer> getSingleLiveDataTaskId() {
     return taskId;
   }
+
 
   public void loadTasks() {
     taskInteractor
@@ -67,9 +76,11 @@ public class TaskViewModel extends ViewModel {
     if (contactsListMediatorLiveData == null) {
       contactsListMediatorLiveData = new MediatorLiveData<>();
       //success
-      contactsListMediatorLiveData.addSource(rxTaskLiveData, resource -> contactsListMediatorLiveData.setValue(resource));
+      contactsListMediatorLiveData
+          .addSource(rxTaskLiveData, resource -> contactsListMediatorLiveData.setValue(resource));
       //error handling
-      contactsListMediatorLiveData.addSource(error, resource -> contactsListMediatorLiveData.setValue(resource));
+      contactsListMediatorLiveData
+          .addSource(error, resource -> contactsListMediatorLiveData.setValue(resource));
       loadTasks();
     }
     return contactsListMediatorLiveData;

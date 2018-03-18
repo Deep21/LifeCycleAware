@@ -4,33 +4,18 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.example.samfisher.lifecycleaware.R;
-import com.example.samfisher.lifecycleaware.TaskEntity;
-import com.example.samfisher.lifecycleaware.domain.interactor.TaskRetrieveInteractor;
 import com.example.samfisher.lifecycleaware.viewmodel.TaskDetailViewModel;
 import com.example.samfisher.lifecycleaware.viewmodel.TaskDetailViewModelFactory;
-import com.jakewharton.rxbinding2.widget.RxSearchView;
 import dagger.android.support.AndroidSupportInjection;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 
@@ -52,8 +37,7 @@ public class DetailTaskFragment extends Fragment {
   @Inject
   TaskDetailViewModelFactory detailViewModelFactory;
   TaskDetailViewModel detailViewModel;
-  @BindView(R.id.search)
-  SearchView searchView;
+
   private Unbinder binder;
 
   public DetailTaskFragment() {

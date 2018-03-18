@@ -6,4 +6,7 @@
   <string name="title_activity_detail_contact">DetailContactActivity</string>
   <string name="list_title">coucou</string>
   <string name="statistics_title">stats</string>
+  <string name="search">Search</string>
+  <string name="title">Titre</string>
+  <string name="description">description</string>
 </resources>
