@@ -3,11 +3,15 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/LifeCycleAware.iml" filepath="$PROJECT_DIR$/.idea/LifeCycleAware.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/LifeCycleAware.iml" filepath="$PROJECT_DIR$/.idea/LifeCycleAware.iml" />
       <module fileurl="file://$PROJECT_DIR$/LifeCycleAware.iml" filepath="$PROJECT_DIR$/LifeCycleAware.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation/app.iml" filepath="$PROJECT_DIR$/presentation/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
       <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
       <module fileurl="file://$PROJECT_DIR$/domain/domain.iml" filepath="$PROJECT_DIR$/domain/domain.iml" />
-      <module fileurl="file://$PROJECT_DIR$/presentation/app.iml" filepath="$PROJECT_DIR$/presentation/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/domain/domain.iml" filepath="$PROJECT_DIR$/domain/domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation/presentation.iml" filepath="$PROJECT_DIR$/presentation/presentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/task/task.iml" filepath="$PROJECT_DIR$/task/task.iml" />
     </modules>
   </component>
