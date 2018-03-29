@@ -1,0 +1,74 @@
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+ext {
+    //Android
+    androidBuildToolsVersion = "24.0.1"
+    androidMinSdkVersion = 15
+    androidTargetSdkVersion = 21
+    androidCompileSdkVersion = 21
+    archLifecycleVersion = '1.1.1'
+
+    //Libraries
+    daggerVersion = '2.15'
+    butterKnifeVersion = '8.8.1'
+    recyclerViewVersion = '26.1.0'
+
+    rxJavaVersion = '2.1.12'
+    rxAndroidVersion = '2.0.2'
+    gsonVersion = '2.8.2'
+    realmVersion = '5.0.0'
+    okHttpVersion = '3.10.0'
+    androidAnnotationsVersion = '21.0.3'
+    arrowVersion = '1.0.0'
+    moshiVersion = '1.5.0'
+
+    //Testing
+    robolectricVersion = '3.1.1'
+    jUnitVersion = '4.12'
+    assertJVersion = '1.7.1'
+    mockitoVersion = '1.9.5'
+    dexmakerVersion = '1.0'
+    espressoVersion = '2.0'
+    testingSupportLibVersion = '0.1'
+
+    //Development
+    leakCanaryVersion = '1.5.4'
+    timberVersion = '4.7.0'
+
+    presentationDependencies = [
+            daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger:             "com.google.dagger:dagger:${daggerVersion}",
+            butterKnife:        "com.jakewharton:butterknife:${butterKnifeVersion}",
+            recyclerView:       "com.android.support:recyclerview-v7:${recyclerViewVersion}",
+            rxJava:             "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxAndroid:          "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+    ]
+
+    presentationTestDependencies = [
+            mockito:            "org.mockito:mockito-core:${mockitoVersion}",
+            dexmaker:           "com.google.dexmaker:dexmaker:${dexmakerVersion}",
+            dexmakerMockito:    "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}",
+            espresso:           "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+            testingSupportLib:  "com.android.support.test:testing-support-lib:${testingSupportLibVersion}",
+    ]
+
+    domainDependencies = [
+            rxJava:             "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            arrow:              "com.fernandocejas:arrow:${arrowVersion}"
+    ]
+
+    domainTestDependencies = [
+            junit:              "junit:junit:${jUnitVersion}",
+            mockito:            "org.mockito:mockito-core:${mockitoVersion}",
+            assertj:            "org.assertj:assertj-core:${assertJVersion}"
+    ]
+
+    developmentDependencies = [
+            leakCanary: "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
+            timber: "com.jakewharton.timber:timber:${timberVersion}"
+    ]
+}
