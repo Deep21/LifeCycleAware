@@ -16,12 +16,13 @@ ext {
     daggerVersion = '2.15'
     butterKnifeVersion = '8.8.1'
     recyclerViewVersion = '26.1.0'
-
+    cardviewVersion = '26.1.0'
     rxJavaVersion = '2.1.12'
     rxAndroidVersion = '2.0.2'
     gsonVersion = '2.8.2'
     realmVersion = '5.0.0'
     okHttpVersion = '3.10.0'
+    retrofitVersion = '2.4.0'
     androidAnnotationsVersion = '21.0.3'
     arrowVersion = '1.0.0'
     moshiVersion = '1.5.0'
@@ -41,11 +42,19 @@ ext {
 
     presentationDependencies = [
             daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
+            daggerSupport:     "com.google.dagger:dagger-android-support:${daggerVersion}",
             dagger:             "com.google.dagger:dagger:${daggerVersion}",
             butterKnife:        "com.jakewharton:butterknife:${butterKnifeVersion}",
             recyclerView:       "com.android.support:recyclerview-v7:${recyclerViewVersion}",
+            cardView:           "com.android.support:cardview-v7:${cardviewVersion}",
             rxJava:             "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            gson:               "com.google.code.gson:gson:${gsonVersion}",
+            moshi:              "com.squareup.moshi:moshi:${moshiVersion}",
             rxAndroid:          "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+            okhttp:             "com.squareup.okhttp3:okhttp:${okHttpVersion}",
+            retrofit:           "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            retrofitAdapterRxjava :           "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+            retrofitConcerterGson :           "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
     ]
 
     presentationTestDependencies = [
